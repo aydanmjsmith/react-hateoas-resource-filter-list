@@ -17,7 +17,7 @@ const EntityTableBody = ({tableDef, entities}) => {
                     : tableDef.buildRows(entities).map((entityRow) => 
                         <EntityTableRow 
                             key={rowKey ++} 
-                            {...entityRow} />)
+                            entityRow={entityRow} />)
                 }
             </tbody>
         </React.Fragment>
@@ -31,9 +31,12 @@ EntityTableBody.propTypes = {
     entities: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-const EntityTableRow = (entityRow) => {
+const EntityTableRow = ({entityRow}) => {
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     let  columnKey = 0;
+
+    console.log("entityRow");
+    console.log(entityRow);
 
     return (
         <React.Fragment>

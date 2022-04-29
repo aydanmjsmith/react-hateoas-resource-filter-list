@@ -21,7 +21,7 @@ export default [
         ],
         plugins: [
             commonjs({ 
-                include: /node_modules/ 
+                include: '/node_modules/**', 
             }),
             babel({
                 exclude: 'node_modules/**',
@@ -32,7 +32,6 @@ export default [
             resolve({
                 preferBuiltins: true,
             }),
-            
             json(),
             terser(),
         ]
