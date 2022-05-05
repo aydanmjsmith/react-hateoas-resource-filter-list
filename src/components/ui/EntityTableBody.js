@@ -4,8 +4,9 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEdit, faTimesCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
+import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
 
-const EntityTableBody = ({tableDef, entities}) => {
+const EntityTableBody = ({tableDef, filterDef, entities}) => {
     let  rowKey = 0;
     return (
         <React.Fragment>
@@ -17,6 +18,7 @@ const EntityTableBody = ({tableDef, entities}) => {
                     : tableDef.buildRows(entities).map((entityRow) => 
                         <EntityTableRow 
                             key={rowKey ++} 
+                            filterDef={filterDef}
                             entityRow={entityRow} />)
                 }
             </tbody>
@@ -28,21 +30,25 @@ export default EntityTableBody;
 
 EntityTableBody.propTypes = {
     tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
+    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
     entities: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-const EntityTableRow = ({entityRow}) => {
+const EntityTableRow = ({filterDef, entityRow}) => {
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     let  columnKey = 0;
 
-    console.log("entityRow");
-    console.log(entityRow);
+    const deleteRow = async () => {
+        setConfirmDeleteOpen(false); 
+        await entityRow._deleteFunc();
+        await filterDef.filter();
+    }
 
     return (
         <React.Fragment>
             <ConfirmDeleteModal 
                 isOpen={confirmDeleteOpen}
-                success={() => { setConfirmDeleteOpen(false); entityRow._deleteFunc(); }}   
+                success={() => { deleteRow() }}   
                 cancel={() => setConfirmDeleteOpen(false)} />
             <tr>
                 { entityRow._columns.map((column) => 

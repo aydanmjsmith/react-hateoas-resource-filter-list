@@ -1,28 +1,20 @@
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import EntityFilterDefinition from '../classes/filter/EntityFilterDefinition';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { saveEntityFilterState } from '../store/actions/entityFilterActions';
 
 /**
- * 
  * @param {String} resourceUrl
- * @param {boolean} paged
- * @param {String} uuId
+ * @param {Function} getEntities
+ * @param {Boolean} paged
  * @returns {Object[], EntityFilterDefinition} 
  */
-const useEntityFilter = (resourceUrl, paged, uuId) => {
-    //const dispatch = useDispatch();
-    // const state = useSelector(state => state.entityFilter.entityFilterStates
-    //     .find(s => s.uuId === uuId));
-    const [responseData, setResponseData] = useState(null); 
+const useEntityFilter = (resourceUrl, getEntities, paged) => {
+    const [result, setResult] = useState(null); 
     const filterDef = useRef(null);
 
     useEffect(() => {
         console.log("useEntityFilter useEffect: DO ONLY ONCE")
-        filterDef.current = new EntityFilterDefinition(resourceUrl, paged);
-        filterDef.current.refreshFunc = () => getEntities();
-        getEntities();
+        filterDef.current = new EntityFilterDefinition(resourceUrl, getEntities, setResult, paged);
     }, []);
     
     useEffect(() => {
@@ -49,17 +41,13 @@ const useEntityFilter = (resourceUrl, paged, uuId) => {
         // } else {
     }, [resourceUrl]);
 
-    const getEntities = async () => {
-        try {
-            const response = await axios.get(filterDef.current._filterUrl);
-            setResponseData(response.data);
-            //dispatch(saveEntityFilterState(uuId, result.data._links.self.href));
-        } catch (e) {
-            alert(e);
-        }
-    };
+    return { result, filterDef: filterDef.current };
+}
 
-    return { responseData, filterDef: filterDef.current };
+useEntityFilter.propTypes = {
+    resourceUrl: PropTypes.string.isRequired,
+    getEntities: PropTypes.func.isRequired,
+    paged: PropTypes.bool.isRequired,
 }
 
 export default useEntityFilter;

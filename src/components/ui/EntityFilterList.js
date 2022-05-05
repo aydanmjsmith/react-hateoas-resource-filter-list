@@ -6,12 +6,12 @@ import EntityTableTitle from './EntityTableTitle';
 import EntityTable from './EntityTable';
 import EntityPageControls from './EntityPageControls';
 
-const EntityFilterList = ({resourceUrl, tableDef, paged}) => {
+const EntityFilterList = ({resourceUrl, getEntities, tableDef, paged}) => {
     const [showFilters, setShowFilters] = useState(false);
-    const { responseData, filterDef } = useEntityFilter(resourceUrl, paged, "");
+    const { result, filterDef } = useEntityFilter(resourceUrl, getEntities, paged, "");
     
-    console.log("responseData");
-    console.log(responseData);
+    console.log("result");
+    console.log(result);
     console.log("entityFilterDefinition");
     console.log(filterDef);
     console.log("tableDefinition");
@@ -21,14 +21,14 @@ const EntityFilterList = ({resourceUrl, tableDef, paged}) => {
         return null;
     }
 
-    const entities = responseData._embedded ? Object.values(responseData._embedded)[0] : [];
+    const entities = result._embedded ? Object.values(result._embedded)[0] : [];
 
     return (
         <React.Fragment>
             <EntityTableTitle 
                 tableDef={tableDef} 
                 filterDef={filterDef} 
-                page={responseData.page}
+                page={result.page}
                 toggleFiltersFunc={() => setShowFilters(!showFilters)}/>
             <EntityTable 
                 tableDef={tableDef} 
@@ -38,8 +38,8 @@ const EntityFilterList = ({resourceUrl, tableDef, paged}) => {
             { paged 
                 ?   <EntityPageControls
                         filterDef={filterDef}
-                        page={responseData.page}
-                        links={responseData._links}/>
+                        page={result.page}
+                        links={result._links}/>
                 : null }
         </React.Fragment>
     );
@@ -48,7 +48,8 @@ const EntityFilterList = ({resourceUrl, tableDef, paged}) => {
 export default EntityFilterList;
 
 EntityFilterList.propTypes = {
-    resourceUrl:  PropTypes.string.isRequired,
+    resourceUrl: PropTypes.string.isRequired,
+    getEntities: PropTypes.func.isRequired,
     tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
-    paged:  PropTypes.bool.isRequired,
+    paged: PropTypes.bool.isRequired,
 }

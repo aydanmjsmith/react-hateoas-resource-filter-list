@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { EntityFilterList } from "react-hateoas-resource-filter-list";
 import { EntityTableDefinition } from "react-hateoas-resource-filter-list";
 import { EntityColumnDefinition } from "react-hateoas-resource-filter-list";
@@ -6,25 +7,39 @@ import { EntityFunctionDefinition } from "react-hateoas-resource-filter-list";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const JobSearch = () => {
-    const tableDef = buildJobsTableDef();
+    const tableDef = buildTableDef();
     const resourceUrl = 'http://localhost:8080/jobs/';
+
+    const getEntities = async (filterUrl) => {
+        try {
+            const response = await axios.get(filterUrl);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <React.Fragment>
             <EntityFilterList 
                 tableDef={tableDef}
                 resourceUrl={resourceUrl}
+                getEntities={(filterUrl) => getEntities(filterUrl)}
                 paged={true} />
         </React.Fragment>
     );
 };
 
-export default JobSearch
+export default JobSearch;
 
 const deleteFunc = async (args) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`deleteFunc called with arguments:\n${argString}`);
+
+    await (r => setTimeout(() => {
+        console.log('finished waiting'); 
+    }, 1000));
 }
 
 const editFunc = async (args) => {
@@ -47,7 +62,7 @@ const colFormatFunc = (colValue) => {
     return `formated ${colValue}`;
 };
 
-const buildJobsTableDef = () => {
+const buildTableDef = () => {
     const refColDef = new EntityColumnDefinition("reference", "jobRef", "string");
     const titleColDef = new EntityColumnDefinition("title", "title", "string");
     const customerColDef = new EntityColumnDefinition("customer", "customerFullName", "string");

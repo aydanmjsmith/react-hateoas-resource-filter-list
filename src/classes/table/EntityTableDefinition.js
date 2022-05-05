@@ -1,4 +1,3 @@
-import EntityFilterDefinition from "../filter/EntityFilterDefinition";
 import EntityColumnDefinition from "./EntityColumnDefinition";
 import EntityFunctionDefinition from "./EntityFunctionDefinition";
 import EntityRow from "./EntityRow";
@@ -14,13 +13,6 @@ export class EntityTableDefinition {
     constructor(title, columnDefs) {
         this._title = title;
         this._columnDefs = columnDefs
-    }
-
-    /**
-     * @param {EntityFilterDefinition} filterDef
-     */
-    set filterDef(filterDef) {
-        this._filterDef = filterDef
     }
 
     /**

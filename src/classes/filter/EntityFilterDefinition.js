@@ -3,9 +3,11 @@ import { EntityPropertyFilter } from "./EntityPropertyFilter";
 export class EntityFilterDefinition {
     /**
      * @param {String} resourceUrl
+     * @param {Function} getEntities
+     * @param {Function} setResult
      * @param {boolean} paged
      */
-    constructor(resourceUrl, paged) {
+    constructor(resourceUrl, getEntities, setResult, paged) {
         const url = new URL(resourceUrl);
         if (paged) {
             url.searchParams.set('page', 0); 
@@ -15,8 +17,12 @@ export class EntityFilterDefinition {
         url.searchParams.set('sort', ''); 
 
         this._filterUrl = url;
+        this._getEntities = getEntities;
+        this._setResult = setResult;
         this._paged = paged;
         this._propertyFilters = [];
+
+        this.filter();
     }
 
     /**
@@ -29,15 +35,6 @@ export class EntityFilterDefinition {
     }
 
     /**
-     * setter for _refreshFunc
-     * 
-     * @param {Function} func
-     */
-     set refreshFunc(func) {
-        this._refreshFunc = func
-    }
-
-    /**
      * @param {number} size page size
      */
     setPageSize(size) {
@@ -45,7 +42,7 @@ export class EntityFilterDefinition {
             this._filterUrl.searchParams.set('page', 0); 
             this._filterUrl.searchParams.set('size', size);
         }
-        this._refreshFunc();
+        this.filter();
     }
 
     /**
@@ -55,7 +52,7 @@ export class EntityFilterDefinition {
         if (this._paged) {
             this._filterUrl = new URL(pageUrl);
         }
-        this._refreshFunc();
+        this.filter();
     }
 
     /**
@@ -63,7 +60,7 @@ export class EntityFilterDefinition {
      */
     setSort(sort) {
         this._filterUrl.searchParams.set('sort', sort);
-        this._refreshFunc();
+        this.filter();
     }
 
     /**
@@ -90,7 +87,12 @@ export class EntityFilterDefinition {
             this._filterUrl.searchParams.set('page', 0); 
         }
         
-        this._refreshFunc();
+        this.filter();
+    }
+
+    async filter() {
+        const data = await this._getEntities(this._filterUrl);
+        this._setResult(data ? data : {});
     }
 
     /**

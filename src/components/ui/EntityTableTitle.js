@@ -31,7 +31,7 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
                     </Col> : null
                 }
                 <Col className="col-auto">
-                    { tableDef.hasAddFunc ? 
+                    { tableDef.hasAddFunc() ? 
                         <span>
                             <Button 
                                 size="sm" 
@@ -60,7 +60,7 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
                     <Button 
                         size="sm" 
                         color="primary" 
-                        onClick={() => filterDef._refreshFunc()}
+                        onClick={() => filterDef.filter()}
                         data-bs-toggle="tooltip" 
                         title="refresh table">
                             <FontAwesomeIcon icon={faSyncAlt} />

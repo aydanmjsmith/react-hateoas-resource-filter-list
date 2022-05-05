@@ -6,10 +6,10 @@ const App = () => {
   return (
     <React.Fragment>
       <JobSearch />
-      <hr />
+      {/* <hr />
       <JobSearch />
       <hr />
-      <JobSearch />
+      <JobSearch /> */}
     </React.Fragment>
   );
 }
