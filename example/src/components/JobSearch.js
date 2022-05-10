@@ -8,7 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const JobSearch = () => {
     const tableDef = buildTableDef();
-    const resourceUrl = 'http://localhost:8080/jobs/';
+    //const resourceUrl = 'http://localhost:8080/api/jobs/';
+    const resourceUrlWithParams 
+        = 'http://localhost:8080/api/jobs/?filter=jobRef%3A02%2Ctitle%3Athis%2CcustomerFullName%3AAyd&page=11&size=5&sort=title,desc';
 
     const getEntities = async (filterUrl) => {
         try {
@@ -23,7 +25,7 @@ const JobSearch = () => {
         <React.Fragment>
             <EntityFilterList 
                 tableDef={tableDef}
-                resourceUrl={resourceUrl}
+                resourceUrl={resourceUrlWithParams}
                 getEntities={(filterUrl) => getEntities(filterUrl)}
                 paged={true} />
         </React.Fragment>
@@ -36,10 +38,6 @@ const deleteFunc = async (args) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`deleteFunc called with arguments:\n${argString}`);
-
-    await (r => setTimeout(() => {
-        console.log('finished waiting'); 
-    }, 1000));
 }
 
 const editFunc = async (args) => {

@@ -13,7 +13,6 @@ const useEntityFilter = (resourceUrl, getEntities, paged) => {
     const filterDef = useRef(null);
 
     useEffect(() => {
-        console.log("useEntityFilter useEffect: DO ONLY ONCE")
         filterDef.current = new EntityFilterDefinition(resourceUrl, getEntities, setResult, paged);
     }, []);
     

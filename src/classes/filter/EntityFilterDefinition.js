@@ -1,6 +1,12 @@
 import { EntityPropertyFilter } from "./EntityPropertyFilter";
 
 export class EntityFilterDefinition {
+    // Constants
+    static get PAGE_PARAM() { return 'page'; }
+    static get SIZE_PARAM() { return 'size'; }
+    static get FILTER_PARAM() { return 'filter'; }
+    static get SORT_PARAM() { return 'sort'; }
+
     /**
      * @param {String} resourceUrl
      * @param {Function} getEntities
@@ -9,18 +15,32 @@ export class EntityFilterDefinition {
      */
     constructor(resourceUrl, getEntities, setResult, paged) {
         const url = new URL(resourceUrl);
-        if (paged) {
-            url.searchParams.set('page', 0); 
-            url.searchParams.set('size', 10);
+        if (paged && !url.searchParams.has(EntityFilterDefinition.PAGE_PARAM)) {
+            url.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
+            url.searchParams.set(EntityFilterDefinition.SIZE_PARAM, 10);
         } 
-        url.searchParams.set('filter', '');
-        url.searchParams.set('sort', ''); 
+
+        if (url.searchParams.has(EntityFilterDefinition.FILTER_PARAM)) {
+            const fsp = url.searchParams.get(EntityFilterDefinition.FILTER_PARAM) + ",";
+            const matches = fsp.matchAll(/(\w.+?)(:|<|>)([\w,. ]+?),/g);
+            const filters = [];
+            for (const match of matches) {
+                filters.push(new EntityPropertyFilter(match[1], match[2], match[3]));
+            }
+            this._propertyFilters = filters;
+        } else {
+            url.searchParams.set(EntityFilterDefinition.FILTER_PARAM, '');
+            this._propertyFilters = [];
+        }
+
+        if (!url.searchParams.has(EntityFilterDefinition.SORT_PARAM)) {
+            url.searchParams.set(EntityFilterDefinition.SORT_PARAM, ''); 
+        }
 
         this._filterUrl = url;
         this._getEntities = getEntities;
         this._setResult = setResult;
         this._paged = paged;
-        this._propertyFilters = [];
 
         this.filter();
     }
@@ -39,8 +59,8 @@ export class EntityFilterDefinition {
      */
     setPageSize(size) {
         if (this._paged) {
-            this._filterUrl.searchParams.set('page', 0); 
-            this._filterUrl.searchParams.set('size', size);
+            this._filterUrl.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
+            this._filterUrl.searchParams.set(EntityFilterDefinition.SIZE_PARAM, size);
         }
         this.filter();
     }
@@ -59,7 +79,7 @@ export class EntityFilterDefinition {
      * @param {String} sort sort string 
      */
     setSort(sort) {
-        this._filterUrl.searchParams.set('sort', sort);
+        this._filterUrl.searchParams.set(EntityFilterDefinition.SORT_PARAM, sort);
         this.filter();
     }
 
@@ -67,8 +87,6 @@ export class EntityFilterDefinition {
      * @param {EntityPropertyFilter} propertyFilter 
      */
     setPropertyFilter(propertyFilter) {
-        console.log(propertyFilter);
-
         const updFilters = this._propertyFilters.filter(pf => pf._property != propertyFilter._property);
         if (propertyFilter._value) {
             updFilters.push(propertyFilter);
@@ -82,16 +100,16 @@ export class EntityFilterDefinition {
             filterUrlParams.slice(1);
         }
 
-        this._filterUrl.searchParams.set('filter', filterUrlParams.slice(1));
+        this._filterUrl.searchParams.set(EntityFilterDefinition.FILTER_PARAM, filterUrlParams.slice(1));
         if (this._paged) {
-            this._filterUrl.searchParams.set('page', 0); 
+            this._filterUrl.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
         }
         
         this.filter();
     }
 
     async filter() {
-        const data = await this._getEntities(this._filterUrl);
+        const data = await this._getEntities(this._filterUrl.href);
         this._setResult(data ? data : {});
     }
 
