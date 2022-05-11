@@ -34,26 +34,36 @@ const JobSearch = () => {
 
 export default JobSearch;
 
-const deleteFunc = async (args) => {
+const deleteFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`deleteFunc called with arguments:\n${argString}`);
+
+    callback();
 }
 
-const editFunc = async (args) => {
+const editFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`editFunc called with arguments:\n${argString}`);
+
+    callback();
 }
 
-const addFunc = async () => {
+const addFunc = ({args, callback}) => {
+    var argString = '';
+    args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`addFunc called`);
+
+    callback();
 }
 
-const onclickFunc = async (args) => {
+const onclickFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`onclickFunc called with arguments:\n${argString}`);
+
+    callback();
 }
 
 const colFormatFunc = (colValue) => {
@@ -71,7 +81,7 @@ const buildTableDef = () => {
     const tableDef = new EntityTableDefinition('Jobs', [refColDef, titleColDef, customerColDef]);
     tableDef.deleteFunc = new EntityFunctionDefinition(deleteFunc, "_links.self.href", "jobRef", "title");
     tableDef.editFunc = new EntityFunctionDefinition(editFunc, "_links.self.href");
-    tableDef.addFunc = () => addFunc();
+    tableDef.addFunc = addFunc;
 
     return tableDef;
 }

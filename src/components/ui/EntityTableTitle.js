@@ -15,6 +15,14 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
         pageDesc = `showing ${start} to ${end} of ${page.totalElements} entries`;
     }
 
+    const refreshTable = () => {
+        filterDef.filter();
+    }
+
+    const addRow = async () => {
+        tableDef._addFunc({args: [], callback: refreshTable});
+    }
+
     return (
         <React.Fragment>
             <Row className="py-2 m-0 mt-1 bg-light border d-flex justify-content-between">
@@ -36,7 +44,7 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
                             <Button 
                                 size="sm" 
                                 color="primary" 
-                                onClick={() => tableDef._addFunc()}
+                                onClick={() => addRow()}
                                 data-bs-toggle="tooltip" 
                                 title="add new table item">
                                     <FontAwesomeIcon icon={faPlus} />
@@ -60,7 +68,7 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
                     <Button 
                         size="sm" 
                         color="primary" 
-                        onClick={() => filterDef.filter()}
+                        onClick={() => refreshTable()}
                         data-bs-toggle="tooltip" 
                         title="refresh table">
                             <FontAwesomeIcon icon={faSyncAlt} />
@@ -80,6 +88,6 @@ EntityTableTitle.propTypes = {
         size: PropTypes.number.isRequired,
         totalElements: PropTypes.number.isRequired,
         totalPages: PropTypes.number.isRequired,
-    }).isRequired,
+    }),
     toggleFiltersFunc: PropTypes.func.isRequired,
 }

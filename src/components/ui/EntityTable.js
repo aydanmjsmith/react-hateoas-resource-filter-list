@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'reactstrap';
 import EntityTableHeader from './EntityTableHeader';
 import EntityTableBody from './EntityTableBody';
 import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
 import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
+import { Table } from 'reactstrap';
 
 const EntityTable = ({tableDef, filterDef, showFilters, entities}) => {
     return (
@@ -18,7 +18,7 @@ const EntityTable = ({tableDef, filterDef, showFilters, entities}) => {
                     <EntityTableBody 
                         tableDef={tableDef}
                         filterDef={filterDef}
-                        entities={entities}/>
+                        entities={entities} />
                 </Table>
             </div>
         </React.Fragment>

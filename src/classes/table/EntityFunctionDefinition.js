@@ -13,9 +13,14 @@ export class EntityFunctionDefinition {
         this._argProps = argProps;
     }
 
-    buildFunc(entity) {
+    /**
+     * @param {Object} entity
+     * @param {Function} callback
+     * @returns {Function} the function
+     */
+    buildFunc(entity, callback) {
         const argVals = this._argProps.map(arg => resolvePath(entity, arg));
-        return this._func(argVals);
+        return this._func({ args: argVals, callback } );
     }
 }
 

@@ -8,7 +8,7 @@ import EntityPageControls from './EntityPageControls';
 
 const EntityFilterList = ({resourceUrl, getEntities, tableDef, paged}) => {
     const [showFilters, setShowFilters] = useState(false);
-    const { result, filterDef } = useEntityFilter(resourceUrl, getEntities, paged, "");
+    const { result, filterDef } = useEntityFilter(resourceUrl, getEntities, paged);
 
     if (!filterDef) {
         return null;

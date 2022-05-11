@@ -50,27 +50,28 @@ export class EntityTableDefinition {
 
     /**
      * @param {Array.<Object>} entities
+     * @param {Function} callback
      * @returns {Array.<EntityRow>} entity rows
      */
-    buildRows(entities) {
-        const f = entities.map((entity) => this.buildRow(entity));
-        return entities.map((entity) => this.buildRow(entity));
+    buildRows(entities, callback) {
+        return entities.map((entity) => this.buildRow(entity, callback));
     }
 
     /**
      * @param {Object} entity
+     * @param {Function} callback
      * @returns {EntityRow} entity row
      */
-    buildRow(entity) {
+    buildRow(entity, callback) {
         var rowColumns = this._columnDefs
-            .map((columnDef) => columnDef.buildRowColumn(entity));
+            .map((columnDef) => columnDef.buildRowColumn(entity, callback));
         
         const deleteFunc = this.hasDeleteFunc()
-            ? () => this._deleteFunc.buildFunc(entity)
+            ? () => this._deleteFunc.buildFunc(entity, callback)
             : null;
 
         const editFunc = this.hasEditFunc()
-            ? () => this._editFunc.buildFunc(entity)
+            ? () => this._editFunc.buildFunc(entity, callback)
             : null;
 
         return new EntityRow(rowColumns, deleteFunc, editFunc);

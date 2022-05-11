@@ -42,15 +42,16 @@ export class EntityColumnDefinition {
 
     /**
      * @param {Object} entity
+     * @param {Function} callback
      * @returns {EntityRowColumn} entity rows
      */
-     buildRowColumn(entity) {
+     buildRowColumn(entity, callback) {
         const value = this.hasFormatFunc()
             ? this._formatFunc(resolvePath(entity, this._property)) 
             : resolvePath(entity, this._property);
         
         const onclickFunc = this.hasOnclickFunc()
-            ? () => this._onclickFunc.buildFunc(entity)
+            ? () => this._onclickFunc.buildFunc(entity, callback)
             : null;
 
         return new EntityRowColumn(value, onclickFunc);

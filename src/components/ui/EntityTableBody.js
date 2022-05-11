@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faEdit, faTimesCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
 import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
 
 const EntityTableBody = ({tableDef, filterDef, entities}) => {
     let  rowKey = 0;
+
+    const refreshTable = () => {
+        filterDef.filter();
+    }
+
     return (
         <React.Fragment>
             <tbody>
@@ -15,11 +19,11 @@ const EntityTableBody = ({tableDef, filterDef, entities}) => {
                     ?   <tr>
                             <td colSpan={tableDef._columnDefs.length + 1}><span className="fw-bold">No results</span></td>
                         </tr>
-                    : tableDef.buildRows(entities).map((entityRow) => 
+                    : tableDef.buildRows(entities, refreshTable).map((entityRow) => 
                         <EntityTableRow 
                             key={rowKey ++} 
                             filterDef={filterDef}
-                            entityRow={entityRow} />)
+                            entityRow={entityRow}/>)
                 }
             </tbody>
         </React.Fragment>
@@ -34,22 +38,11 @@ EntityTableBody.propTypes = {
     entities: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-const EntityTableRow = ({filterDef, entityRow}) => {
-    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+const EntityTableRow = ({entityRow}) => {
     let  columnKey = 0;
-
-    const deleteRow = async () => {
-        setConfirmDeleteOpen(false); 
-        await entityRow._deleteFunc();
-        await filterDef.filter();
-    }
-
+    
     return (
         <React.Fragment>
-            <ConfirmDeleteModal 
-                isOpen={confirmDeleteOpen}
-                success={() => { deleteRow() }}   
-                cancel={() => setConfirmDeleteOpen(false)} />
             <tr>
                 { entityRow._columns.map((column) => 
                     column._onclickFunc 
@@ -69,7 +62,7 @@ const EntityTableRow = ({filterDef, entityRow}) => {
                     &nbsp;
                     { entityRow._deleteFunc ? 
                         <FontAwesomeIcon 
-                            onClick={() => setConfirmDeleteOpen(true)} 
+                            onClick={entityRow._deleteFunc} 
                             style={{cursor: "pointer"}} 
                             icon={faTrashAlt} 
                             data-bs-toggle="tooltip"
@@ -80,25 +73,4 @@ const EntityTableRow = ({filterDef, entityRow}) => {
             </tr>
         </React.Fragment>
     );
-}
-
-const ConfirmDeleteModal = (props) => {
-    return (
-        <React.Fragment>
-           <Modal isOpen={props.isOpen} className="modal-fullscreen-md-down">
-                <ModalHeader className="bg-light" toggle={props.cancel}><FontAwesomeIcon icon={faTrashAlt} size="sm" />&nbsp;confirm delete</ModalHeader>
-                <ModalBody>Are you sure you wish to delete this item?</ModalBody>
-                <ModalFooter>
-                    <Button
-                        color="primary"
-                        size="sm"
-                        onClick={() => props.success()}>
-                        <FontAwesomeIcon icon={faCheck} size="sm" />&nbsp;continue
-                    </Button>
-                    <Button size="sm" onClick={() => props.cancel()}>
-                        <FontAwesomeIcon icon={faTimesCircle} size="sm" />&nbsp;cancel
-                    </Button>
-                </ModalFooter>
-            </Modal>
-        </React.Fragment>);
 }
