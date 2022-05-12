@@ -23,11 +23,12 @@ const JobSearch = () => {
 
     return (
         <React.Fragment>
+            <h1>Entity Filter List Example</h1>
             <EntityFilterList 
                 tableDef={tableDef}
                 resourceUrl={resourceUrlWithParams}
                 getEntities={(filterUrl) => getEntities(filterUrl)}
-                paged={true} />
+                paged={false} />
         </React.Fragment>
     );
 };
