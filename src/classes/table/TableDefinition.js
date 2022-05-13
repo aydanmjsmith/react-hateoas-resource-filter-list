@@ -15,7 +15,12 @@ export class TableDefinition {
     constructor(title, columns, entityFuncs) {
         this._title = title;
         this._columns = columns;
-        this._entityFuncs = entityFuncs;
+
+        if (entityFuncs) {
+            this._entityFuncs = entityFuncs;
+        } else {
+            this._entityFuncs = new EntityFunctions
+        }
     }
 
     /**

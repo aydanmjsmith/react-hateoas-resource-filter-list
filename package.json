@@ -1,6 +1,6 @@
 {
   "name": "react-hateoas-resource-filter-list",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A react library that renders a filterable, sortable and pageable table that represents a HATEOAS resource that exposes a list.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

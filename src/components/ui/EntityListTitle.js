@@ -26,7 +26,7 @@ const EntityListTitle = ({title, functions, filterDef, page, toggleFiltersFunc})
     return (
         <React.Fragment>
             <Row className="py-2 m-0 mt-1 bg-light border d-flex justify-content-between">
-                { functions._title ? 
+                { title ? 
                     <Col className="col-auto">
                         <span className="fs-5 fw-bold">
                             <FontAwesomeIcon icon={faList} size="sm" />&nbsp;{title}
