@@ -14,7 +14,12 @@ export class CustomListDefinition {
     constructor(title, buildFunc, entityFuncs) {
         this._title = title;
         this._buildFunc = buildFunc;
-        this._entityFuncs = entityFuncs;
+        
+        if (entityFuncs) {
+            this._entityFuncs = entityFuncs;
+        } else {
+            this._entityFuncs = new EntityFunctions();
+        }
     }
 
     /**

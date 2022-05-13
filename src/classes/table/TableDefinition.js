@@ -19,7 +19,7 @@ export class TableDefinition {
         if (entityFuncs) {
             this._entityFuncs = entityFuncs;
         } else {
-            this._entityFuncs = new EntityFunctions
+            this._entityFuncs = new EntityFunctions();
         }
     }
 
