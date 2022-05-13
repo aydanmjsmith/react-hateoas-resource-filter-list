@@ -4,6 +4,7 @@ import CustomListDefinition from '../../classes/custom/CustomListDefinition';
 import useEntityFilter from '../../hooks/useEntityFilter';
 import EntityPageControls from './EntityPageControls';
 import EntityListTitle from './EntityListTitle';
+import { Row } from 'reactstrap';
 
 const EntityCustomList = ({resourceUrl, getEntities, customListDef, paged}) => {
     const [showFilters, setShowFilters] = useState(false);
@@ -27,10 +28,12 @@ const EntityCustomList = ({resourceUrl, getEntities, customListDef, paged}) => {
                 filterDef={filterDef} 
                 page={result.page}
                 toggleFiltersFunc={() => setShowFilters(!showFilters)}/>
-            { entities.length > 0
-                ? entities.map((entity) => customListDef.buildListItem(entity, refreshTable))
-                : <span>No results</span>
-            }
+            <div className="row m-0">
+                { entities.length > 0
+                    ? entities.map((entity) => customListDef.buildListItem(entity, refreshTable))
+                    : <span>No results</span>
+                }
+            </div>
             { paged 
                 ?   <EntityPageControls
                         filterDef={filterDef}

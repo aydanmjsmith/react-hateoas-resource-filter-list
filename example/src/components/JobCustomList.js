@@ -55,7 +55,8 @@ export default JobCustomList;
 const CustomListItem = ({entity, editEntity, deleteEntity}) => {
     return (
         <React.Fragment>
-            <div className="card m-1">
+            <div className='col-4 p-1'>
+            <div className="card">
                 <div className="card-header">
                     <div className="row">
                         <div className="col"><span className="fw-bold text-wrap">{entity.jobRef}</span></div>
@@ -70,6 +71,7 @@ const CustomListItem = ({entity, editEntity, deleteEntity}) => {
                     <p>{entity.title}</p>
                     <p>{entity.description}</p>
                 </div>
+            </div>
             </div>
         </React.Fragment>
     );
