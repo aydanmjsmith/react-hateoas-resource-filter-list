@@ -1,4 +1,4 @@
-export class EntityRowColumn {
+export class Cell {
     _value;
     _onclickFunc;
 
@@ -12,4 +12,4 @@ export class EntityRowColumn {
     }
 }
 
-export default EntityRowColumn;
+export default Cell;

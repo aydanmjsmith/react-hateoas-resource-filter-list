@@ -1,12 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { EntityFilterList } from "react-hateoas-resource-filter-list";
-import { EntityTableDefinition } from "react-hateoas-resource-filter-list";
-import { EntityColumnDefinition } from "react-hateoas-resource-filter-list";
-import { EntityFunctionDefinition } from "react-hateoas-resource-filter-list";
+import { EntityFunctions, EntityList } from "react-hateoas-resource-filter-list";
+import { TableDefinition } from "react-hateoas-resource-filter-list";
+import { Column } from "react-hateoas-resource-filter-list";
+import { FunctionDefinition } from "react-hateoas-resource-filter-list";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const JobSearch = () => {
+const JobList = () => {
     const tableDef = buildTableDef();
     //const resourceUrl = 'http://localhost:8080/api/jobs/';
     const resourceUrlWithParams 
@@ -23,23 +23,22 @@ const JobSearch = () => {
 
     return (
         <React.Fragment>
-            <h1>Entity Filter List Example</h1>
-            <EntityFilterList 
+            <h1>Entity List Example</h1>
+            <EntityList
                 tableDef={tableDef}
                 resourceUrl={resourceUrlWithParams}
                 getEntities={(filterUrl) => getEntities(filterUrl)}
-                paged={false} />
+                paged={true} />
         </React.Fragment>
     );
 };
 
-export default JobSearch;
+export default JobList;
 
 const deleteFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`deleteFunc called with arguments:\n${argString}`);
-
     callback();
 }
 
@@ -47,7 +46,6 @@ const editFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`editFunc called with arguments:\n${argString}`);
-
     callback();
 }
 
@@ -55,7 +53,6 @@ const addFunc = ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`addFunc called`);
-
     callback();
 }
 
@@ -63,7 +60,6 @@ const onclickFunc = async ({args, callback}) => {
     var argString = '';
     args.forEach(arg => argString = `${argString}\n${arg}`);
     alert(`onclickFunc called with arguments:\n${argString}`);
-
     callback();
 }
 
@@ -72,17 +68,17 @@ const colFormatFunc = (colValue) => {
 };
 
 const buildTableDef = () => {
-    const refColDef = new EntityColumnDefinition("reference", "jobRef", "string");
-    const titleColDef = new EntityColumnDefinition("title", "title", "string");
-    const customerColDef = new EntityColumnDefinition("customer", "customerFullName", "string");
+    const ref = new Column("reference", "jobRef", "string");
+    const title = new Column("title", "title", "string");
+    const customer = new Column("customer", "customerFullName", "string");
     
-    refColDef.onclickFunc = new EntityFunctionDefinition(onclickFunc, "_links.self.href", "jobRef");
-    customerColDef.formatFunc = colFormatFunc;
-        
-    const tableDef = new EntityTableDefinition('Jobs', [refColDef, titleColDef, customerColDef]);
-    tableDef.deleteFunc = new EntityFunctionDefinition(deleteFunc, "_links.self.href", "jobRef", "title");
-    tableDef.editFunc = new EntityFunctionDefinition(editFunc, "_links.self.href");
-    tableDef.addFunc = addFunc;
+    ref.onclickFunc = new FunctionDefinition(onclickFunc, "_links.self.href", "jobRef");
+    customer.formatFunc = colFormatFunc;
 
-    return tableDef;
+    const functions = new EntityFunctions();
+    functions.deleteFunc = new FunctionDefinition(deleteFunc, "_links.self.href", "jobRef", "title");
+    functions.editFunc = new FunctionDefinition(editFunc, "_links.self.href");
+    functions.addFunc = addFunc;
+
+    return new TableDefinition('Jobs', [ref, title, customer], functions);
 }

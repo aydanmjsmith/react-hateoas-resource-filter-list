@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSort } from '@fortawesome/free-solid-svg-icons'
 import useEffectExceptOnMount from '../../hooks/useEffectExceptOnMount';
 import useDebouncedValue from '../../hooks/useDebouncedValue';
-import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
-import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
-import EntityPropertyFilter from '../../classes/filter/EntityPropertyFilter';
+import TableDefinition from '../../classes/table/TableDefinition';
+import FilterDefinition from '../../classes/filter/FilterDefinition';
+import PropertyFilter from '../../classes/filter/PropertyFilter';
 
 const EntityTableHeader = ({tableDef, filterDef, showFilters}) => {
     const asc = useRef(true);
@@ -21,17 +21,17 @@ const EntityTableHeader = ({tableDef, filterDef, showFilters}) => {
         <React.Fragment>
             <thead>
                 <tr>
-                    { tableDef._columnDefs.map((columnDef) => 
-                        <th key={columnDef._property}>
-                            {columnDef._title}&nbsp;
+                    { tableDef._columns.map((column) => 
+                        <th key={column._property}>
+                            {column._title}&nbsp;
                             <FontAwesomeIcon 
-                                onClick={() => sort(columnDef._property)} 
+                                onClick={() => sort(column._property)} 
                                 style={{ cursor: 'pointer' }} 
                                 icon={faSort} size="sm" 
                                 data-bs-toggle="tooltip"
                                 title="sort" />
                             <EntityTableColumnFilter 
-                                columnDef={columnDef} 
+                                column={column} 
                                 filterDef={filterDef} 
                                 showFilters={showFilters} />
                         </th>
@@ -46,17 +46,17 @@ const EntityTableHeader = ({tableDef, filterDef, showFilters}) => {
 export default EntityTableHeader;
 
 EntityTableHeader.propTypes = {
-    tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
-    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
+    tableDef: PropTypes.instanceOf(TableDefinition).isRequired,
+    filterDef: PropTypes.instanceOf(FilterDefinition).isRequired,
     showFilters: PropTypes.bool.isRequired,
 }
 
-const EntityTableColumnFilter = ({columnDef, filterDef, showFilters}) => {
-    const [filter, setFilter] = useState(filterDef.getPropertyFilterValue(columnDef._property));
+const EntityTableColumnFilter = ({column, filterDef, showFilters}) => {
+    const [filter, setFilter] = useState(filterDef.getPropertyFilterValue(column._property));
     const debouncedFilter = useDebouncedValue(filter, 500);
     
     useEffectExceptOnMount(() => {
-        const epf = new EntityPropertyFilter(columnDef._property, ':', debouncedFilter);
+        const epf = new PropertyFilter(column._property, ':', debouncedFilter);
         filterDef.setPropertyFilter(epf);
     }, [debouncedFilter]);
 
@@ -69,13 +69,13 @@ const EntityTableColumnFilter = ({columnDef, filterDef, showFilters}) => {
     }
 
     var filterInput = null;
-    switch(columnDef._filterType) {
+    switch(column._filterType) {
         case 'string': 
             filterInput = 
                 <Input 
                     type="text" 
-                    placeholder={columnDef._title} 
-                    name={columnDef._title} 
+                    placeholder={column._title} 
+                    name={column._title} 
                     onChange={onChange} 
                     value={filter} />;
             break;

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EntityTableHeader from './EntityTableHeader';
 import EntityTableBody from './EntityTableBody';
-import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
-import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
+import FilterDefinition from '../../classes/filter/FilterDefinition';
+import TableDefinition from '../../classes/table/TableDefinition';
 import { Table } from 'reactstrap';
 
 const EntityTable = ({tableDef, filterDef, showFilters, entities}) => {
@@ -28,8 +28,8 @@ const EntityTable = ({tableDef, filterDef, showFilters, entities}) => {
 export default EntityTable;
 
 EntityTable.propTypes = {
-    tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
-    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
+    tableDef: PropTypes.instanceOf(TableDefinition).isRequired,
+    filterDef: PropTypes.instanceOf(FilterDefinition).isRequired,
     showFilters: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.object).isRequired,
 }

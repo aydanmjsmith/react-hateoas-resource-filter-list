@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList, faPlus, faFilter, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
-import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
+import { FilterDefinition } from '../../classes/filter/FilterDefinition';
+import { EntityFunctions } from '../../classes';
 
-const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
+const EntityListTitle = ({title, functions, filterDef, page, toggleFiltersFunc}) => {
     var pageDesc;
 
     if (page) {
@@ -20,16 +20,16 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
     }
 
     const addRow = async () => {
-        tableDef._addFunc({args: [], callback: refreshTable});
+        functions._addFunc({args: [], callback: refreshTable});
     }
 
     return (
         <React.Fragment>
             <Row className="py-2 m-0 mt-1 bg-light border d-flex justify-content-between">
-                { tableDef._title ? 
+                { functions._title ? 
                     <Col className="col-auto">
                         <span className="fs-5 fw-bold">
-                            <FontAwesomeIcon icon={faList} size="sm" />&nbsp;{tableDef._title}
+                            <FontAwesomeIcon icon={faList} size="sm" />&nbsp;{title}
                         </span>
                     </Col> : null
                 }
@@ -39,7 +39,7 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
                     </Col> : null
                 }
                 <Col className="col-auto">
-                    { tableDef.hasAddFunc() ? 
+                    { functions.hasAddFunc() ? 
                         <span>
                             <Button 
                                 size="sm" 
@@ -78,11 +78,12 @@ const EntityTableTitle = ({tableDef, filterDef, page, toggleFiltersFunc}) => {
         </React.Fragment>);
 }
 
-export default EntityTableTitle;
+export default EntityListTitle;
 
-EntityTableTitle.propTypes = {
-    tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
-    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
+EntityListTitle.propTypes = {
+    title: PropTypes.string.isRequired,
+    functions: PropTypes.instanceOf(EntityFunctions).isRequired,
+    filterDef: PropTypes.instanceOf(FilterDefinition).isRequired,
     page: PropTypes.shape({
         number: PropTypes.number.isRequired,
         size: PropTypes.number.isRequired,

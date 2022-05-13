@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import EntityFilterDefinition from '../classes/filter/EntityFilterDefinition';
+import FilterDefinition from '../classes/filter/FilterDefinition';
 
 /**
  * @param {String} resourceUrl
  * @param {Function} getEntities
  * @param {Boolean} paged
- * @returns {Object[], EntityFilterDefinition} 
+ * @returns {Object[], FilterDefinition} 
  */
 const useEntityFilter = (resourceUrl, getEntities, paged) => {
     const [result, setResult] = useState(null); 
     const filterDef = useRef(null);
 
     useEffect(() => {
-        filterDef.current = new EntityFilterDefinition(resourceUrl, getEntities, setResult, paged);
+        filterDef.current = new FilterDefinition(resourceUrl, getEntities, setResult, paged);
     }, []);
     
     useEffect(() => {

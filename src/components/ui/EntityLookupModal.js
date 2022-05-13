@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import LookupInputProperty from '../../classes/lookup/LookupInputProperty';
-import EntityPropertyFilter from '../../classes/filter/EntityPropertyFilter';
+import LookupDefinition from '../../classes/lookup/LookupDefinition';
+import PropertyFilter from '../../classes/filter/PropertyFilter';
 import useDebouncedValue from '../../hooks/useDebouncedValue';
 import useEffectExceptOnMount from '../../hooks/useEffectExceptOnMount';
 import useEntityFilter from '../../hooks/useEntityFilter';
@@ -9,7 +9,7 @@ import { Modal, ModalHeader, ModalBody, Form, Input, Button, FormGroup, Label, R
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faTimesCircle, faSearch } from '@fortawesome/free-solid-svg-icons'
 
-const EntityLookupModal = ({isOpen, close, select, entityName, properties, resourceUrl, getEntities}) => {
+const EntityLookupModal = ({isOpen, close, select, lookupDef, resourceUrl, getEntities}) => {
     const [selectedEntity, setSelectedEntity] = useState(null);
     const {result, filterDef} = useEntityFilter(resourceUrl, getEntities, true);
 
@@ -36,12 +36,12 @@ const EntityLookupModal = ({isOpen, close, select, entityName, properties, resou
         <React.Fragment>
             <Modal isOpen={isOpen}>
                 <ModalHeader className="bg-light" toggle={() => close()}>
-                    <FontAwesomeIcon icon={faSearch} size="sm" />&nbsp;find {entityName}
+                    <FontAwesomeIcon icon={faSearch} size="sm" />&nbsp;find {lookupDef._title}
                 </ModalHeader>
                 <ModalBody>
                     <Form onSubmit={onSubmit}>
                         <Row>
-                            { properties.map(prop => 
+                            { lookupDef._properties.map(prop => 
                                 <Col className="col-12 col-sm-6" key={propertyKey++}>
                                     <FormGroup>
                                         <Label for={prop._name}>{prop._title}</Label>
@@ -54,7 +54,7 @@ const EntityLookupModal = ({isOpen, close, select, entityName, properties, resou
                         <hr />
                         <FormGroup>
                             <FilterResultSelect 
-                                properties={properties}
+                                properties={lookupDef._properties}
                                 setSelectedEntity={(entity) => setSelectedEntity(entity)}
                                 entities={entities} />
                         </FormGroup>
@@ -85,8 +85,7 @@ EntityLookupModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
-    entityName: PropTypes.string.isRequired,
-    properties: PropTypes.arrayOf(PropTypes.instanceOf(LookupInputProperty)).isRequired,
+    lookupDef: PropTypes.instanceOf(LookupDefinition).isRequired,
     resourceUrl: PropTypes.string.isRequired,
     getEntities: PropTypes.func.isRequired,
 }
@@ -96,7 +95,7 @@ const FilterInput = ({filterDef, property}) => {
     const debouncedFilter = useDebouncedValue(filter, 500);
 
     useEffectExceptOnMount(() => {
-        const epf = new EntityPropertyFilter(property._name, ':', debouncedFilter);
+        const epf = new PropertyFilter(property._name, ':', debouncedFilter);
         filterDef.setPropertyFilter(epf);
     }, [debouncedFilter]);
 

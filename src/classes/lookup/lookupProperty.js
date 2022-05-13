@@ -1,4 +1,4 @@
-export class LookupInputProperty {
+export class LookupProperty {
     /**
      * @param {String} name
      * @param {String} title
@@ -9,4 +9,4 @@ export class LookupInputProperty {
     }
 }
 
-export default LookupInputProperty;
+export default LookupProperty;

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
-import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
+import TableDefinition from '../../classes/table/TableDefinition';
+import FilterDefinition from '../../classes/filter/FilterDefinition';
 
 const EntityTableBody = ({tableDef, filterDef, entities}) => {
     let  rowKey = 0;
@@ -17,7 +17,7 @@ const EntityTableBody = ({tableDef, filterDef, entities}) => {
             <tbody>
                 { entities.length < 1 
                     ?   <tr>
-                            <td colSpan={tableDef._columnDefs.length + 1}><span className="fw-bold">No results</span></td>
+                            <td colSpan={tableDef._columns.length + 1}><span className="fw-bold">No results</span></td>
                         </tr>
                     : tableDef.buildRows(entities, refreshTable).map((entityRow) => 
                         <EntityTableRow 
@@ -33,23 +33,23 @@ const EntityTableBody = ({tableDef, filterDef, entities}) => {
 export default EntityTableBody;
 
 EntityTableBody.propTypes = {
-    tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
-    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
+    tableDef: PropTypes.instanceOf(TableDefinition).isRequired,
+    filterDef: PropTypes.instanceOf(FilterDefinition).isRequired,
     entities: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const EntityTableRow = ({entityRow}) => {
-    let  columnKey = 0;
+    let  cellKey = 0;
     
     return (
         <React.Fragment>
             <tr>
-                { entityRow._columns.map((column) => 
-                    column._onclickFunc 
-                        ? <td key={columnKey ++} onClick={column._onclickFunc} style={{cursor: "pointer"}}>{column._value}</td>
-                        : <td key={columnKey ++}>{column._value}</td>)
+                { entityRow._cells.map((cell) => 
+                    cell._onclickFunc 
+                        ? <td key={cellKey ++} onClick={cell._onclickFunc} style={{cursor: "pointer"}}>{cell._value}</td>
+                        : <td key={cellKey ++}>{cell._value}</td>)
                 }
-                <td key={columnKey ++} style={{width: "60px"}}> 
+                <td key={cellKey ++} style={{width: "60px"}}> 
                     { entityRow._editFunc ?
                         <FontAwesomeIcon 
                             onClick={entityRow._editFunc} 

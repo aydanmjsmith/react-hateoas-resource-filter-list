@@ -1,4 +1,4 @@
-export class EntityPropertyFilter {
+export class PropertyFilter {
     /**
      * @param {String} property
      * @param {String} operation
@@ -22,4 +22,4 @@ export class EntityPropertyFilter {
     }
 }
 
-export default EntityPropertyFilter;
+export default PropertyFilter;

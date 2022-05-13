@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.css';
+import JobCustomList from './components/JobCustomList';
 import JobLookup from './components/JobLookup';
-import JobSearch from './components/JobSearch';
+import JobList from './components/JobList';
 
 const App = () => {
   return (
     <React.Fragment>
-      <JobSearch />
+      <JobList />
       <JobLookup />
+      <JobCustomList />
       {/* <hr />
       <JobSearch />
       <hr />

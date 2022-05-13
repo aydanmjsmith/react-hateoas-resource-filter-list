@@ -1,6 +1,6 @@
 import { resolvePath  } from '../../utils/utils';
 
-export class EntityFunctionDefinition {
+export class FunctionDefinition {
     _func;
     _argProps;
 
@@ -24,4 +24,4 @@ export class EntityFunctionDefinition {
     }
 }
 
-export default EntityFunctionDefinition;
+export default FunctionDefinition;

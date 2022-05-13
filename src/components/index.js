@@ -1,5 +1,4 @@
-export { default as EntityFilterList } from './ui/EntityFilterList';
+export { default as EntityList } from './ui/EntityList';
 export { default as EntityLookupModal } from './ui/EntityLookupModal';
-export { default as EntityTableTitle } from './ui/EntityTableTitle';
-export { default as EntityPageControls } from './ui/EntityPageControls';
+export { default as EntityCustomList } from './ui/EntityCustomList';
 export { default as Test } from './ui/Test';

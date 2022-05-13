@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Pagination, PaginationItem, PaginationLink, InputGroup, Label, Input } from 'reactstrap';
-import EntityFilterDefinition from '../../classes/filter/EntityFilterDefinition';
+import FilterDefinition from '../../classes/filter/FilterDefinition';
 
 const EntityPageControls = ({filterDef, page, links}) => {
     const onChangePageSize = (event) => {
@@ -65,7 +65,7 @@ const EntityPageControls = ({filterDef, page, links}) => {
 export default EntityPageControls;
 
 EntityPageControls.propTypes = {
-    filterDef: PropTypes.instanceOf(EntityFilterDefinition).isRequired,
+    filterDef: PropTypes.instanceOf(FilterDefinition).isRequired,
     page: PropTypes.shape({
             number: PropTypes.number.isRequired,
             size: PropTypes.number.isRequired,

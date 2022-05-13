@@ -1,8 +1,8 @@
 import { resolvePath  } from '../../utils/utils';
-import EntityFunctionDefinition from './EntityFunctionDefinition';
-import EntityRowColumn from './EntityRowColumn';
+import FunctionDefinition from '../common/FunctionDefinition';
+import Cell from './Cell';
 
-export class EntityColumnDefinition {
+export class Column {
     _title;
     _property;
     _filterType;
@@ -19,14 +19,14 @@ export class EntityColumnDefinition {
     }
 
     /**
-     * @param {EntityFunctionDefinition} func
+     * @param {FunctionDefinition} func
      */
     set onclickFunc(func) {
         this._onclickFunc = func
     }
 
     /**
-     * @param {EntityFunctionDefinition} func
+     * @param {Function} func
      */
     set formatFunc(func) {
         this._formatFunc = func
@@ -43,9 +43,9 @@ export class EntityColumnDefinition {
     /**
      * @param {Object} entity
      * @param {Function} callback
-     * @returns {EntityRowColumn} entity rows
+     * @returns {Cell} cell
      */
-     buildRowColumn(entity, callback) {
+     buildCell(entity, callback) {
         const value = this.hasFormatFunc()
             ? this._formatFunc(resolvePath(entity, this._property)) 
             : resolvePath(entity, this._property);
@@ -54,8 +54,8 @@ export class EntityColumnDefinition {
             ? () => this._onclickFunc.buildFunc(entity, callback)
             : null;
 
-        return new EntityRowColumn(value, onclickFunc);
+        return new Cell(value, onclickFunc);
     }
 }
 
-export default EntityColumnDefinition;
+export default Column;

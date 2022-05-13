@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import EntityTableDefinition from '../../classes/table/EntityTableDefinition';
+import TableDefinition from '../../classes/table/TableDefinition';
 import useEntityFilter from '../../hooks/useEntityFilter';
-import EntityTableTitle from './EntityTableTitle';
 import EntityTable from './EntityTable';
 import EntityPageControls from './EntityPageControls';
+import EntityListTitle from './EntityListTitle';
 
-const EntityFilterList = ({resourceUrl, getEntities, tableDef, paged}) => {
+const EntityList = ({resourceUrl, getEntities, tableDef, paged}) => {
     const [showFilters, setShowFilters] = useState(false);
     const {result, filterDef} = useEntityFilter(resourceUrl, getEntities, paged);
 
@@ -18,8 +18,9 @@ const EntityFilterList = ({resourceUrl, getEntities, tableDef, paged}) => {
 
     return (
         <React.Fragment>
-            <EntityTableTitle 
-                tableDef={tableDef} 
+            <EntityListTitle
+                title={tableDef._title}
+                functions={tableDef._entityFuncs} 
                 filterDef={filterDef} 
                 page={result.page}
                 toggleFiltersFunc={() => setShowFilters(!showFilters)}/>
@@ -38,11 +39,11 @@ const EntityFilterList = ({resourceUrl, getEntities, tableDef, paged}) => {
     );
 }
 
-export default EntityFilterList;
+export default EntityList;
 
-EntityFilterList.propTypes = {
+EntityList.propTypes = {
     resourceUrl: PropTypes.string.isRequired,
     getEntities: PropTypes.func.isRequired,
-    tableDef: PropTypes.instanceOf(EntityTableDefinition).isRequired,
+    tableDef: PropTypes.instanceOf(TableDefinition).isRequired,
     paged: PropTypes.bool.isRequired,
 }

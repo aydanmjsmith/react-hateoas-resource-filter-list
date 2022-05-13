@@ -1,6 +1,6 @@
-import { EntityPropertyFilter } from "./EntityPropertyFilter";
+import { PropertyFilter } from "./PropertyFilter";
 
-export class EntityFilterDefinition {
+export class FilterDefinition {
     // Constants
     static get PAGE_PARAM() { return 'page'; }
     static get SIZE_PARAM() { return 'size'; }
@@ -15,26 +15,34 @@ export class EntityFilterDefinition {
      */
     constructor(resourceUrl, getEntities, setResult, paged) {
         const url = new URL(resourceUrl);
-        if (paged && !url.searchParams.has(EntityFilterDefinition.PAGE_PARAM)) {
-            url.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
-            url.searchParams.set(EntityFilterDefinition.SIZE_PARAM, 10);
-        } 
 
-        if (url.searchParams.has(EntityFilterDefinition.FILTER_PARAM)) {
-            const fsp = url.searchParams.get(EntityFilterDefinition.FILTER_PARAM) + ",";
+        if (paged) {
+            if (!url.searchParams.has(FilterDefinition.PAGE_PARAM)) {
+                url.searchParams.set(FilterDefinition.PAGE_PARAM, 0); 
+                url.searchParams.set(FilterDefinition.SIZE_PARAM, 10);
+            }
+        } else {
+            if (url.searchParams.has(FilterDefinition.PAGE_PARAM)) {
+                url.searchParams.delete(FilterDefinition.PAGE_PARAM, 0); 
+                url.searchParams.delete(FilterDefinition.SIZE_PARAM, 10);
+            }
+        }
+
+        if (url.searchParams.has(FilterDefinition.FILTER_PARAM)) {
+            const fsp = url.searchParams.get(FilterDefinition.FILTER_PARAM) + ",";
             const matches = fsp.matchAll(/(\w.+?)(:|<|>)([\w,. ]+?),/g);
             const filters = [];
             for (const match of matches) {
-                filters.push(new EntityPropertyFilter(match[1], match[2], match[3]));
+                filters.push(new PropertyFilter(match[1], match[2], match[3]));
             }
             this._propertyFilters = filters;
         } else {
-            url.searchParams.set(EntityFilterDefinition.FILTER_PARAM, '');
+            url.searchParams.set(FilterDefinition.FILTER_PARAM, '');
             this._propertyFilters = [];
         }
 
-        if (!url.searchParams.has(EntityFilterDefinition.SORT_PARAM)) {
-            url.searchParams.set(EntityFilterDefinition.SORT_PARAM, ''); 
+        if (!url.searchParams.has(FilterDefinition.SORT_PARAM)) {
+            url.searchParams.set(FilterDefinition.SORT_PARAM, ''); 
         }
 
         this._filterUrl = url;
@@ -48,7 +56,7 @@ export class EntityFilterDefinition {
     /**
      * setter for _propertyFilters
      * 
-     * @param {Array.<EntityPropertyFilter>} propertyFilters
+     * @param {Array.<PropertyFilter>} propertyFilters
      */
      set propertyFilters(propertyFilters) {
         this._propertyFilters = propertyFilters
@@ -59,8 +67,8 @@ export class EntityFilterDefinition {
      */
     setPageSize(size) {
         if (this._paged) {
-            this._filterUrl.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
-            this._filterUrl.searchParams.set(EntityFilterDefinition.SIZE_PARAM, size);
+            this._filterUrl.searchParams.set(FilterDefinition.PAGE_PARAM, 0); 
+            this._filterUrl.searchParams.set(FilterDefinition.SIZE_PARAM, size);
         }
         this.filter();
     }
@@ -79,12 +87,12 @@ export class EntityFilterDefinition {
      * @param {String} sort sort string 
      */
     setSort(sort) {
-        this._filterUrl.searchParams.set(EntityFilterDefinition.SORT_PARAM, sort);
+        this._filterUrl.searchParams.set(FilterDefinition.SORT_PARAM, sort);
         this.filter();
     }
 
     /**
-     * @param {EntityPropertyFilter} propertyFilter 
+     * @param {PropertyFilter} propertyFilter 
      */
     setPropertyFilter(propertyFilter) {
         const updFilters = this._propertyFilters.filter(pf => pf._property != propertyFilter._property);
@@ -100,9 +108,9 @@ export class EntityFilterDefinition {
             filterUrlParams.slice(1);
         }
 
-        this._filterUrl.searchParams.set(EntityFilterDefinition.FILTER_PARAM, filterUrlParams.slice(1));
+        this._filterUrl.searchParams.set(FilterDefinition.FILTER_PARAM, filterUrlParams.slice(1));
         if (this._paged) {
-            this._filterUrl.searchParams.set(EntityFilterDefinition.PAGE_PARAM, 0); 
+            this._filterUrl.searchParams.set(FilterDefinition.PAGE_PARAM, 0); 
         }
         
         this.filter();
@@ -123,4 +131,4 @@ export class EntityFilterDefinition {
     }
 }
 
-export default EntityFilterDefinition;
+export default FilterDefinition;
